@@ -12,7 +12,7 @@ public:
     VectorClass(const VectorClass& rhs) :
         pSize(rhs.size()),
         pCapacity(rhs.capacity() + 5),
-        pArray(new int[pCapacity])
+        pArray(new T[pCapacity])
     {
         for (int i = 0; i < rhs.size(); i++){
             pArray[i] = rhs.pArray[i];
@@ -21,7 +21,7 @@ public:
     VectorClass(int elements, T value) :
             pSize(elements),
             pCapacity(elements + 5),
-            pArray(new int[pCapacity])
+            pArray(new T[pCapacity])
     {
         for (int i = 0; i < pSize; i++){
             pArray[i] = value;
@@ -30,7 +30,7 @@ public:
     VectorClass(const std::initializer_list<T>& list) :
             pSize(0),
             pCapacity(list.size() + 5),
-            pArray(new int[pCapacity])
+            pArray(new T[pCapacity])
     {
         for(int i : list){
             pushBack(i);
@@ -39,7 +39,7 @@ public:
     VectorClass() :
             pSize(0),
             pCapacity(2),
-            pArray(new int[pCapacity])
+            pArray(new T[pCapacity])
     {
 
     }
@@ -47,16 +47,16 @@ public:
         delete [] pArray;
     }
 
-    void pushBack(T value){
+
+
+    void pushBack(const T& value){
         if(pSize < pCapacity){
             pArray[pSize] = value;
             ++pSize;
         } else {
-            pCapacity *= 2;
-            int* temp = new int[pCapacity];
-            for (int i = 0; i < pSize; ++i){
-                temp[i] = pArray[i];
-            }
+            pCapacity += 5;
+            T* temp = new T[pCapacity];
+            memcpy(temp, pArray, sizeof(T) * pSize);
             temp[pSize] = value;
             delete [] pArray;
             pArray = temp;
@@ -69,6 +69,38 @@ public:
         }
         --pSize;
     }
+    void insert(int index, T value){
+        if (index >= pSize or index < 0){
+            throw VectorException("Insert - index out of range");
+        }
+        pArray[index] = value;
+    }
+    void clear(){
+        pSize = 0;
+    }
+    void erase(int index){
+        if (index < 0 or index >= pSize){
+            throw VectorException("Erase - Index out of range");
+        }
+        for (int i = index; i < pSize; ++i){
+            pArray[i] = pArray[i + 1];
+        }
+        --pSize;
+    }
+    T& At(int index)
+    {
+        if (index >= pSize or index < 0){
+            throw VectorException("Out of range");
+        }
+        return pArray[index];
+    }
+    T& front(){
+        return pArray[0];
+    }
+    T& back(){
+        return pArray[pSize - 1];
+    }
+
 
     bool empty() const{
         return pSize == 0;
@@ -93,13 +125,22 @@ public:
         return true;
     }
     bool operator!=(const VectorClass& rhs) const{
-        return !(*this == rhs);
+        return *this != rhs;
     }
-    VectorClass& operator = (const VectorClass& rhs){
+    /*VectorClass& operator = (const VectorClass& rhs) {
+        if (rhs.size() > pSize){
+            delete [] pArray;
+            pCapacity = rhs.pCapacity + 5;
+            pArray = new T [pCapacity];
+        }
 
-    }
+        //memcpy(pArray, rhs, sizeof(T) * pSize);
+
+        return *this;
+
+    }*/
     T operator [] (int index) const {
-        if (index > pSize){
+        if (index >= pSize or index < 0){
             throw VectorException("Out of range");
         }
         return pArray[index];
@@ -109,7 +150,7 @@ public:
         for (int i = 0; i < rhs.size(); ++i){
             ostr << rhs.pArray[i] << " ";
         }
-        
+
 
         ostr << std::endl;
 
@@ -118,7 +159,7 @@ public:
 private:
     int pSize;
     int pCapacity;
-    int* pArray;
+    T* pArray;
 
 };
 

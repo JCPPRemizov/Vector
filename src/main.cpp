@@ -1,15 +1,17 @@
 #include <iostream>
+#include <vector>
 #include "VectorClass.h"
 
 int main() {
-    VectorClass<int> a;
-    a.pushBack(2);
-    a.pushBack(3);
-    a.pushBack(4);
-    a.pushBack(5);
-    a.pushBack(5);
+    VectorClass<std::string> a;
+    VectorClass<std::string> b;
+
+    a.pushBack("efef");
+    a.pushBack("hui");
+
+    a.insert(1, "govno");
 
 
-    std::cout << a[0] << std::endl;
+    std::cout << a << std::endl;
     return 0;
 }
