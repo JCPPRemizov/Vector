@@ -3,15 +3,12 @@
 #include "VectorClass.h"
 
 int main() {
-    VectorClass<std::string> a;
-    VectorClass<std::string> b;
-
-    a.pushBack("efef");
-    a.pushBack("hui");
-
-    a.insert(1, "govno");
-
+    VectorClass<int> a;
+    a.pushBack(2);
+    a.pushBack(2);
+    a.pushBack(2);
 
     std::cout << a << std::endl;
+
     return 0;
 }
